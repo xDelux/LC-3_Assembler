@@ -21,41 +21,28 @@ char r7[] = "R7";
 char hash[] = "#";
 
 const char * toBin(char * input) {
-    char * SR2 = malloc(6);
-    int n;
-    sscanf(input, "%d", n);
+    memmove(&input[0], &input[1], strlen(input) - 0);
+    char binaryNum[6];
+    strcpy(binaryNum,"");
+    int n = atoi(input);
+    int k, c;
     if(n < 0) {
-        n = n * -1;
-
-    if (input[1] == "-") {
-        SR2[0] = "1";
-    }
-    else {
-        SR2[0] = "0";
+        n = n * (-1);
     }
 
-        // array to store binary number
-        int binaryNum[5];
+    if (strchr(input, '-') != NULL)
+        strcat(binaryNum, "1");
+    else
+        strcat(binaryNum, "0");
 
-        // counter for binary array
-        int i = 0;
-        int u = 0;
-        while (n > 0) {
-
-            // storing remainder in binary array
-            binaryNum[i] = n % 2;
-            n = n / 2;
-            i++;
-        }
-
-        // printing binary array in reverse order
-        for (int j = i - 1; j >= 0; j--) {
-            SR2[u + 1] = binaryNum[j];
-            u++;
-        }
-
-    return SR2;
+    for (int c = 0; c < 5; ++c) {
+        k = n >> c;
+        if (k & 1)
+            strcat(binaryNum, "1");
+        else
+            strcat(binaryNum, "0");
     }
+    return binaryNum;
 }
 const char * segment1(char * input) {
     char * seg1bits = malloc(4);
@@ -83,7 +70,7 @@ const char * segment1(char * input) {
     return seg1bits;
 }
 const char * reg(char * input) {
-    char * seg2bits = malloc(3);
+    char * seg2bits = malloc(10);
     int r;
     if(r = strcmp(input, r0) == 0) {
         seg2bits = "000";
@@ -117,8 +104,8 @@ const char * reg(char * input) {
         seg2bits = "111";
         return seg2bits;
     }
-    if(r = strcmp(input[0], hash) == 0) {
-        seg2bits = toBin(input);
+    if(strchr(input, '#') != NULL) {
+        const  * seg2bits = toBin(input);
         return seg2bits;
 
     }
@@ -155,7 +142,7 @@ int main() {
     ptr = strtok(NULL, delim);
 
     const char * seg4bits = reg(ptr);
-    printf("%s ", seg4bits);
+    printf("%s ", &seg4bits);
     return 0;
 }
 
