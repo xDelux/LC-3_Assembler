@@ -178,7 +178,12 @@ int main() {
             if (input[i] == ' ')
                 count++;
         }
+        if (count == 0) {
+            char *ptr = strtok(input, delim);
 
+            char * seg1bits = segment1(ptr);
+            printf("%s\n", seg1bits);
+        }
         if (count == 1) {
             char *ptr = strtok(input, delim);
 
