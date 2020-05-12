@@ -28,16 +28,19 @@ char binaryNum[5];
 
 //Converts the input num to binary
 const char * toBin(char * input) {
+    // Removes the first char in the input
     memmove(&input[0], &input[1], strlen(input) - 0);
     int isNegative = 0;
+    // creates a copy of the binary array, so it is possible to use the strcat func.
     strcpy(binaryNum,"");
     int n = atoi(input);
     int k, c;
+    //if the number is negative make it positive, since the algorithm needs a positive number, isNegative is set to true
     if(n < 0) {
         n = n * (-1);
         isNegative = 1;
     }
-
+    // THe algorithm for the binary code, strcat inserts a 1 or a 0 into the array.
     for (int c = 0; c < 5; ++c) {
         k = n >> c;
         if (k & 1)
@@ -46,6 +49,7 @@ const char * toBin(char * input) {
             strcat(binaryNum, "0");
     }
 
+    //If the number was negative the binary has to be altered after the first 1, so 1 becomes 0 and 0 becomes 1
     if (isNegative == 1) {
         for (int i = 0; i < strlen(binaryNum); i++) {
             if (binaryNum[i] == '1') {
@@ -61,10 +65,11 @@ const char * toBin(char * input) {
             }
         }
     }
+    // Reveres the array since strcat works the wrong way than the way binary is read.
     strrev(binaryNum);
     return binaryNum;
 }
-//Converts the first instructions to binary
+//Converts the first instructions to binary, checks for the specific string and returns the according binary
 const char * segment1(char * input) {
     char * seg1bits = malloc(4);
     if (strcmp(input, add) == 0) {
@@ -108,7 +113,7 @@ const char * segment1(char * input) {
     }
     return seg1bits;
 }
-//Converts the reg or num to binary
+//Converts the register or imm5, according the the number and returns the according binary
 const char * reg(char * input) {
     char * seg2bits = malloc(10);
     int r;
@@ -156,32 +161,46 @@ int main() {
     printf("Welcome to the scuffed LC-3 Assembler, type 'stop' to stop\n");
     int stop = 0;
 
+    // Loop start
     while(stop == 0) {
 
+        // Variables needed
         int count = 0;
         char *input = malloc(1000);
+
+        //delimerters for the string tokenizer
         char delim[] = " ";
         char delim2[] = ", ";
 
+        // Arrays allocated for the binary code
         const char * seg1bits;
         const char * seg2bits;
         const char * seg3bits;
         const char * seg4bits;
 
+        // Scans the input
         scanf ("%[^\n]%*c", input);
 
+        // Stops the loop if the user types stop
         if (input == "stop") {
             stop = 1;
         }
 
+        // Loop for counting the number of spaces in the input
         for (int i = 0; i < strlen(input); ++i) {
             if (input[i] == ' ')
                 count++;
         }
+        // Checks for the amount of spaces and set the segments to the correct binary
+        // The same outcome for the if statements just more string tokenizer and prints
         if (count == 0) {
+            // String token to split the input
             char *ptr = strtok(input, delim);
 
+            // Sets the segment to the binary
             char * seg1bits = segment1(ptr);
+
+            //Prints the result
             printf("%s\n", seg1bits);
         }
         if (count == 1) {
