@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+//The necessary variable to check for the specific instructions
 char add[] = "ADD";
 char and[] = "AND";
 char brn[] = "BRn";
@@ -24,9 +24,9 @@ char r4[] = "R4";
 char r5[] = "R5";
 char r6[] = "R6";
 char r7[] = "R7";
-char hash[] = "#";
 char binaryNum[5];
 
+//Converts the input num to binary
 const char * toBin(char * input) {
     memmove(&input[0], &input[1], strlen(input) - 0);
     int isNegative = 0;
@@ -37,8 +37,6 @@ const char * toBin(char * input) {
         n = n * (-1);
         isNegative = 1;
     }
-
-
 
     for (int c = 0; c < 5; ++c) {
         k = n >> c;
@@ -66,10 +64,11 @@ const char * toBin(char * input) {
     strrev(binaryNum);
     return binaryNum;
 }
+//Converts the first instructions to binary
 const char * segment1(char * input) {
     char * seg1bits = malloc(4);
     if (strcmp(input, add) == 0) {
-        seg1bits = "0010";
+        seg1bits = "0001";
     }
     if (strcmp(input, and) == 0) {
         seg1bits = "0101";
@@ -109,6 +108,7 @@ const char * segment1(char * input) {
     }
     return seg1bits;
 }
+//Converts the reg or num to binary
 const char * reg(char * input) {
     char * seg2bits = malloc(10);
     int r;
@@ -154,39 +154,94 @@ const char * reg(char * input) {
 
 int main() {
 
-    const char *input;
-    input = malloc(7);
-    char delim[] = " ";
-    char delim2[] = ", ";
-    printf("Welcome to the scuffed LC-3 Assembler\n");
+    int stop = 0;
 
-    scanf ("%[^\n]%*c", input);
-    char *ptr = strtok(input, delim);
+    while(stop == 0) {
 
-    const char * seg1bits = segment1(ptr);
-    printf("%s", seg1bits);
+        int count = 0;
+        char *input = malloc(1000);
+        char delim[] = " ";
+        char delim2[] = ", ";
 
-    ptr = strtok(NULL, delim2);
+        const char * seg1bits;
+        const char * seg2bits;
+        const char * seg3bits;
+        const char * seg4bits;
 
-    const char * seg2bits = reg(ptr);
-    printf("%s", seg2bits);
+        scanf ("%[^\n]%*c", input);
 
-    ptr = strtok(NULL, delim2);
+        if (input == "stop") {
+            stop = 1;
+        }
 
-    const char * seg3bits = reg(ptr);
-    printf("%s", seg3bits);
+        for (int i = 0; i < strlen(input); ++i) {
+            if (input[i] == ' ')
+                count++;
+        }
 
-    if (seg1bits == "1001")
-        printf("111111");
+        if (count == 1) {
+            char *ptr = strtok(input, delim);
 
-    ptr = strtok(NULL, delim);
+            char * seg1bits = segment1(ptr);
+            printf("%s", seg1bits);
 
-    const char * seg4bits = reg(ptr);
-    if(strlen(seg4bits) > 3) {
-        printf("1%s", seg4bits);
-    }
-    else {
-        printf("000%s", seg4bits);
+            ptr = strtok(NULL, delim2);
+
+            char * seg2bits = reg(ptr);
+            printf("%s\n", seg2bits);
+            continue;
+        }
+        if (count == 2) {
+            char *ptr = strtok(input, delim);
+
+            char * seg1bits = segment1(ptr);
+            printf("%s", seg1bits);
+
+            ptr = strtok(NULL, delim2);
+
+            char * seg2bits = reg(ptr);
+            printf("%s", seg2bits);
+
+            ptr = strtok(NULL, delim2);
+
+            char * seg3bits = reg(ptr);
+            printf("%s", seg3bits);
+
+            if (seg1bits == "1001") {
+                printf("111111\n");
+                continue;
+            }
+            continue;
+        }
+        if (count == 3) {
+            char *ptr = strtok(input, delim);
+
+            char * seg1bits = segment1(ptr);
+            printf("%s", seg1bits);
+
+            ptr = strtok(NULL, delim2);
+
+            char * seg2bits = reg(ptr);
+            printf("%s", seg2bits);
+
+            ptr = strtok(NULL, delim2);
+
+            char * seg3bits = reg(ptr);
+            printf("%s", seg3bits);
+
+            ptr = strtok(NULL, delim);
+
+            char * seg4bits = reg(ptr);
+
+            if(strlen(seg4bits) > 3) {
+                printf("1%s\n", seg4bits);
+                continue;
+            }
+            else {
+                printf("000%s\n", seg4bits);
+                continue;
+            }
+        }
     }
     return 0;
 }
