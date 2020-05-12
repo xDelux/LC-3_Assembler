@@ -153,7 +153,7 @@ const char * reg(char * input) {
 
 
 int main() {
-
+    printf("Welcome to the scuffed LC-3 Assembler, type 'stop' to stop\n");
     int stop = 0;
 
     while(stop == 0) {
